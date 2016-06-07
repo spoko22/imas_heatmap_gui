@@ -56,30 +56,21 @@
     <script>
         var map;
         var testData = {
-            max: 8
-            , data: [{
-                lat: 51.3211
-                , lng: 0.5111
-                , count: 3
-                }, {
-                lat: 51.75
-                , lng: 0.5
-                , count: 2
-                }]
+            data: []
         };
 
         function initMap() {
             // don't forget to add gmaps-heatmap.js
-            var myLatlng = new google.maps.LatLng(51.32, 0.5);
+            var myLatlng = new google.maps.LatLng(51.50489, -0.128402);
             // map options,
             var myOptions = {
-                zoom: 9
+                zoom: 14
                 , center: myLatlng
             };
             map = new google.maps.Map(document.getElementById('map'), myOptions);
             heatmap = new HeatmapOverlay(map, {
                 // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-                "radius": 0.1
+                "radius": 0.005
                 , "maxOpacity": 1, // scales the radius based on map zoom
                 "scaleRadius": true, // if set to false the heatmap uses the global maximum for colorization
                 // if activated: uses the data maximum within the current map boundaries 
@@ -90,6 +81,22 @@
                 valueField: 'count'
             });
             heatmap.setData(testData);
+            addClickListener(map, heatmap);
+        }
+
+        function addClickListener(map, heatmap) {
+            google.maps.event.addListener(map, "click", function (e) {
+                var latLng = e.latLng;
+                var lat = latLng.lat();
+                var lng = latLng.lng();
+                console.log(lat + ', ' + lng);
+                var dataObject = {
+                    lat: lat
+                    , lng: lng
+                    , count: 1
+                };
+                heatmap.addData(dataObject);
+            });
         }
     </script>
     <!--/.nav-collapse -->
